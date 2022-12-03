@@ -1,22 +1,52 @@
-let firstCard = 10
-let secondCard = 4
-let cards = [firstCard, secondCard];
+let player = {
+    name: "Dan",
+    chips: 200,
+}
 
-let sum = firstCard + secondCard
+
+let cards = [];
+let sum = 0;
 let hasBlackjack = false;
-let isAlive = true;
+let isAlive = false;
 let message = '';
 
 let messageEl = document.getElementById('message-el');
 let sumEl = document.getElementById('sum-el');
 let cardsEl = document.getElementById('cards-el');
 
+
+let playerEl = document.getElementById('player-el');
+playerEl.textContent = player.name + ": $" + player.chips;
+
+function getRandomCard() {
+    let randCard = Math.floor(Math.random()*13) + 1;
+    if (randCard === 1) {
+        return 11;
+    } else if (randCard > 10) {
+        return 10;
+    } else {
+        return randCard;
+    }
+}
+
 function startGame() {
+    isAlive = true;
+
+    let firstCard = getRandomCard();
+    let secondCard = getRandomCard();
+
+    cards = [firstCard, secondCard];
+    sum = firstCard + secondCard;
+
     renderGame();
 }
 
 function renderGame() {
-    cardsEl.textContent = 'Cards: ' + cards[0] + ' ' + cards[1];
+    cardsEl.textContent = 'Cards: ';
+    for (let i=0; i<cards.length; i++) {
+        cardsEl.textContent += cards[i] + ' ';
+    }
+
     sumEl.textContent = "Sum: " + sum;
     if (sum <= 20) {
         message = 'Do you want another card?';
@@ -30,7 +60,10 @@ function renderGame() {
     messageEl.textContent = message;
 }
 function newCard() {
-    let newestCard = 5;
-    sum += newestCard;
-    renderGame();
+    if (isAlive === true && hasBlackjack === false) {
+        let newestCard = getRandomCard();
+        sum += newestCard;
+        cards.push(newestCard);
+        renderGame();
+    }
 }
